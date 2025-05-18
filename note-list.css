@@ -86,11 +86,10 @@ a {
 
 .xxx {
     padding: 30px;
-    width: 830px;
+    max-width: 830px;
 }
 
 .notetype-content {
-    width: 100%;
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -108,6 +107,9 @@ a {
 @media(max-width:768px) {
     .notetype-notebox{
         width: 100%;
+    }
+    .xxx {
+        width: 348px;
     }
 }
 
