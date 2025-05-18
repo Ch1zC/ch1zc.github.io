@@ -211,7 +211,7 @@ a {
 
 .button:active {
     transform: scale(0.95);
-  }
+}
 
 .bottombox {
     height: 200px;

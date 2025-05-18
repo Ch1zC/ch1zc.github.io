@@ -18,8 +18,8 @@ function getValueRang(start, end) {
 
 function shownote_recentlyUpdated() {
 
-    const srcList = ["img/icon-pc.svg","pic-serverSetup.png","pic-networkSetup.png",
-        "img/pic-Cybersecurity.png","img/pic-writing.png"]
+    const srcList = ["img/icon-pc.svg","img/icon-serverSetup.png","img/icon-networkSetup.png",
+        "img/icon-Cybersecurity.png","img/icon-writing.png"]
     const typeList = ["操作系统开发","服务器搭建","网络搭建","网络安全","小说"]
 
     getValueRang(0, 3).then(datalist => {

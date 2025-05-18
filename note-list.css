@@ -89,6 +89,13 @@ a {
     max-width: 830px;
 }
 
+.xxx .hr {
+    margin: 0 auto;
+    width: 300px;
+    height: 1px;
+    color: var(--md-sys-color-outline);
+}
+
 .notetype-content {
     display: flex;
     flex-wrap: wrap;
@@ -103,6 +110,8 @@ a {
     border-radius: 30px;
     padding: 15px;
     background-color: var(--md-sys-color-tertiary-container);
+
+    transition: transform 0.1s ease;
 }
 
 @media(max-width:768px) {
@@ -112,6 +121,28 @@ a {
     .xxx {
         width: 348px;
     }
+}
+
+.notetype-notebox:active {
+    transform: scale(0.95);
+}
+
+.warn {
+    margin: 20px auto;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    padding: 15px;
+    background-color: var(--md-sys-color-error);
+}
+
+.warn img {
+    margin: 0 20px;
+}
+
+.warn p {
+    color: var(--md-sys-color-on-error);
 }
 
 .notetype-notebox 
@@ -125,6 +156,6 @@ a {
 }
 
 .note-title {
-    margin-top: 10px;
+    margin-top: 5px;
     font-size: 25px;
 }
