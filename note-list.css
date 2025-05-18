@@ -109,3 +109,7 @@ a {
         width: 100%;
     }
 }
+
+.notetype-notebox .note-title {
+    color: var(	--md-sys-color-tertiary);
+}
