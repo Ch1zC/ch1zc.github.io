@@ -101,6 +101,7 @@ a {
     width: 180px;
     flex: 0 0 auto;
     border-radius: 30px;
+    padding: 15px;
     background-color: var(--md-sys-color-tertiary-container);
 }
 
@@ -113,6 +114,17 @@ a {
     }
 }
 
-.notetype-notebox .note-title {
+.notetype-notebox 
+.note-date,
+.note-title {
     color: var(	--md-sys-color-tertiary);
+}
+
+.note-date {
+    font-size: 13px;
+}
+
+.note-title {
+    margin-top: 10px;
+    font-size: 25px;
 }

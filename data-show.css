@@ -32,6 +32,12 @@ a {
     color: var(--md-sys-color-tertiary);
 }
 
+pre,code {
+    background-color: var(--md-sys-color-secondary-container);
+    border-radius: 10px;
+    padding: 6px;
+}
+
 .xxx {
     padding: 30px;
     max-width: 830px;
@@ -51,4 +57,12 @@ a {
 
 .note-date {
     margin-top: 40px;
+}
+
+h2 {
+    line-height: 50px;
+}
+
+p {
+    line-height: 27px;
 }
