@@ -49,3 +49,21 @@
   --md-sys-color-surface-container-high: rgb(40 42 47);
   --md-sys-color-surface-container-highest: rgb(51 53 58);
 }
+
+.warn {
+  margin: 20px auto;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  padding: 15px;
+  background-color: var(--md-sys-color-error);
+}
+
+.warn img {
+  margin: 0 20px;
+}
+
+.warn p {
+  color: var(--md-sys-color-on-error);
+}

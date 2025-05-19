@@ -73,22 +73,8 @@ a {
     transform: scale(0.95);
 }
 
-.warn {
-    margin: 20px auto;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    padding: 15px;
-    background-color: var(--md-sys-color-error);
-}
-
-.warn img {
-    margin: 0 20px;
-}
-
-.warn p {
-    color: var(--md-sys-color-on-error);
+.warn-dis-displayNone {
+    display: none;
 }
 
 .notetype-notebox 

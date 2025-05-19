@@ -3,6 +3,11 @@ const typeList = ["操作系统开发","服务器搭建","网络搭建","网络�
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = Number(urlParams.get('type'));
+const warnDisBox = document.querySelector(".warn-dis")
+
+if(id != 3){
+    warnDisBox.classList.add("warn-dis-displayNone")
+}
 
 const noteType = typeList[id] + "的笔记"
 document.getElementsByTagName("title")[0].innerHTML = noteType
