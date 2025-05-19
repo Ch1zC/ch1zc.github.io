@@ -8,6 +8,5 @@ ch1zc.github.io是挂载在 github.com 下的个人站点，这里没有令人�
 ## 你需要注意什么：
 所有笔记内容之版权归我所有，学习者可自由copypaste与传播，若公开转发请用正常方式指明出处。笔记均自由公开，必要时将对以此盈利者依法追究法律责任。我想我说的已经足够清楚了。
 
-任何疑问联系我通过MAIL:ypa4141@gmail.com
 
-或者加我[LINE](https://line.me/ti/p/MVfE-zSxNa)
+任何疑问联系我通过MAIL:ypa4141@gmail.com，或者加我的[LINE](https://line.me/ti/p/MVfE-zSxNa)
