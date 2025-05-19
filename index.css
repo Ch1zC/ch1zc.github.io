@@ -96,7 +96,7 @@ a {
     
 }
 
-.recent-updates .recent-updates-content .recent-updates-showarea {
+.recent-updates-showarea {
     height: auto;
     width: 100%;
     display: flex;
@@ -107,7 +107,7 @@ a {
     margin-top: 30px;
 }
 
-.recent-updates-content .recent-updates-showarea .recent-updates-contentbox {
+.recent-updates-showarea .recent-updates-contentbox {
     height: 440px;
     width: 350px;
     flex: 0 0 auto;
