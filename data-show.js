@@ -24,6 +24,7 @@ async function init() {
   if (browser_saved_data !== null) {
 
     note = JSON.parse(browser_saved_data);
+    sessionStorage.removeItem("selectedNote");
 
   } else {
   
