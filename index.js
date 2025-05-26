@@ -1,10 +1,8 @@
-const JSON_PATH = "data/notes.json"
-
 function getValueRang(start, end) {
 
     dataList = new Array()
 
-    return fetch(JSON_PATH)
+    return fetch("data/notes.json")
         .then(response => response.json())
         .then(data => {
             const data_re = data.reverse()
@@ -12,20 +10,28 @@ function getValueRang(start, end) {
         })
     .catch(err => {
         console.log("something wrong:", err)
-        return []
+        return [
+            {
+                "updateDate": "2025年5月26日",
+                "specificTtime": "18点01分",
+                "title": "WRONG",
+                "content": "SOMETHING WRONG its the only thing we know."
+            }
+        ]
     })
 }
 
 function shownote_recentlyUpdated() {
 
     const srcList = ["img/icon-pc.svg","img/icon-serverSetup.svg","img/icon-networkSetup.svg",
-        "img/icon-Cybersecurity.svg","img/icon-writing.svg"]
-    const typeList = ["操作系统开发","服务器搭建","网络搭建","网络安全","小说"]
+        "img/icon-Cybersecurity.svg","img/icon-gameDev.svg","img/icon-writing.svg"]
+    const typeList = ["操作系统开发","服务器搭建","网络搭建","网络安全","游戏开发","小说"]
 
     getValueRang(0, 3).then(datalist => {
         
         for(i in datalist) {
             const data = datalist[i]
+            const id  = data["id"]
             const type  = data["type"]
             const title = data["title"]
             const update_date = data["updateDate"]
@@ -51,8 +57,8 @@ function shownote_recentlyUpdated() {
             text_data_type.innerHTML = typeList[type]
 
             //a: href
-            const a_href = document.createElement("a")
-            a_href.href = "data-show.html"
+            const a_href = document.createElement("p")
+            a_href.classList.add("a")
 
             //text: data title. inside the a
             const text_data_title = document.createElement("h1")
@@ -65,9 +71,9 @@ function shownote_recentlyUpdated() {
             text_data_update_date.classList.add("contentbox-updatedate")
             text_data_update_date.innerHTML = update_date
 
-            text_data_title.addEventListener("click",function() {
-                console.log("clicked")
+            a_href.addEventListener("click",function() {
                 sessionStorage.setItem("selectedNote", JSON.stringify(data))
+                window.location.href = "data-show.html?id=" + id
             })
 
             logoBox.appendChild(img)

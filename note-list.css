@@ -5,7 +5,7 @@
 }
 
 html,body {
-    padding-top: 100px;
+    padding: 100px 0;
     display: flex;
     justify-content: center;
     background-color: var(--md-sys-color-background);
@@ -73,8 +73,12 @@ a {
     transform: scale(0.95);
 }
 
-.warn-dis-displayNone {
+.warn-dis {
     display: none;
+}
+
+.warn-dis-displayNone {
+    display: block;
 }
 
 .notetype-notebox 
