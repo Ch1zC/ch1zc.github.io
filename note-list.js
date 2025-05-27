@@ -1,4 +1,4 @@
-const typeList = ["操作系统开发","服务器搭建","网络搭建","网络安全","小说"]
+const typeList = ["操作系统开发","服务器搭建","网络搭建","网络安全","游戏开发","小说"]
 
 const urlParams = new URLSearchParams(window.location.search);
 const id = Number(urlParams.get('type'));
