@@ -41,6 +41,8 @@ async function init() {
   document.querySelector(".note-title").innerHTML = title
   document.querySelector(".note-content").innerHTML = content
   document.querySelector(".note-date").innerHTML = date
+
+  document.title = title
 }
 
 init()
